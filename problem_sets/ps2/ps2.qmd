@@ -1,0 +1,243 @@
+---
+title: "30538 Problem Set 2: Parking Tickets"
+author: "Your Name Here"
+date: "the date"
+format: 
+    pdf: 
+        include-in-header:
+            text: |
+                \usepackage{fvextra}
+                \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+---
+
+1. "This submission is my work alone and complies with the 30538 integrity
+policy." Add your initials to indicate your agreement: *CT*
+2. "I have uploaded the names of anyone I worked with on the problem set **[here](https://docs.google.com/forms/d/1-zzHx762odGlpVWtgdIC55vqF-j3gqdAp6Pno1rIGK0/edit)**"  \*\*\_\_\*\* (1 point)
+3. Late coins used this pset: \*\*\_\_*\* Late coins left after submission: *3*
+4. Knit your `ps2.qmd` to make `ps2.pdf`. 
+    * The PDF should not be more than 25 pages. Use `head()` and re-size figures when appropriate. 
+5. Push  `ps2.qmd` and `ps2.pdf` to your github repo. It is fine to use Github Desktop.
+6. Submit `ps2.pdf` via Gradescope (4 points) 
+7. Tag your submission in Gradescope
+
+```{python}
+import pandas as pd
+import altair as alt
+alt.renderers.enable("png")
+import time
+from vega_datasets import data as vega_data
+import warnings 
+warnings.filterwarnings('ignore')
+```
+
+
+### Data cleaning continued (15 points)
+
+Reading in one percent sample 
+```{python}
+# Reading in file
+file_path = r'C:\Users\clari\OneDrive\Documents\Python II\ppha30538_fall2024\problem_sets\ps2\data\parking_tickets_one_percent.csv'
+df = pd.read_csv(file_path)
+```
+
+## 1.1
+Function to create a 2 col dataframe (COl1 = variable name, col2 = num of times the col is NA)
+```{python}
+def count_nas(df):
+    na_counts = df.isna().sum().reset_index()
+    na_counts.columns = ['Variable', 'NA_Count']
+    return na_counts.set_index('Variable')
+two_col_df = count_nas(df)
+
+print(two_col_df)
+```
+
+https://saturncloud.io/blog/how-to-count-the-number-of-missingnan-values-in-each-row-in-python-pandas/#:~:text=(axis%3D1)-,To%20count%20the%20number%20of%20missing%2FNaN%20values%20in%20each,True%20values%20in%20each%20row.
+
+## 1.2
+Three variables are missing much more frequently than the others. Why? (Hint: look at some rows and read the data dictionary written by ProPublica)
+
+```{python}
+descending_two_col_df = two_col_df.sort_values(by='NA_Count', ascending=False)
+print(descending_two_col_df)
+```
+
+Hearing disposition (259899), notice _level (84068), and zipcode(54115) tend to have the most NA Values
+[EXPLAIN WHY]
+
+## 1.3
+Through visual inspection:
+The old code is:0976170
+The new code:0964125 and 964125B
+
+```{python}
+filtered_violations = df[df['violation_description'].str.contains('NO CITY STICKER')]
+
+# Get the unique violation codes
+violation_codes = filtered_violations['violation_code'].unique().tolist()
+
+print("Violation codes for 'NO CITY STICKER':")
+print(violation_codes)
+```
+
+From this, I see that 0976170 is a different code number.
+
+## 1.4
+```{python}
+violation_fines = filtered_violations[filtered_violations['violation_code'].isin(['0964125', '0964125B', '976170'])][['issue_date', 'violation_code', 'fine_level1_amount', 'fine_level2_amount']]
+print(violation_fines)
+
+violation_fines_descending = violation_fines.sort_values(by = 'fine_level2_amount', ascending = False)
+print(violation_fines_descending)
+
+violation_fines_ascending = violation_fines.sort_values(by = 'fine_level2_amount')
+print(violation_fines_ascending)
+```
+
+The old fine value for level1 is 120
+The new fine value for level1 is 200
+The old fine value for level2 is 240
+The new fine value for level2 is 400
+
+### Revenue increase from “missing city sticker” tickets (20 Points)
+
+2.1 Using pandas, create a new value for violation codes which combines the two codes that you found in the previous question.
+
+```{python}
+# Creating a new value to combine the sticker violation
+merged_sticker_violations = df.copy()
+
+# Replace the specified codes with the new code
+merged_sticker_violations['violation_code'] = merged_sticker_violations['violation_code'].replace({
+    '0976170': '012345',
+    '0964125': '012345',
+    '0964125B': '012345'
+})
+
+print(merged_sticker_violations)
+```
+
+Collapse the data to capture the number of missing city sticker tickets by month
+
+```{python}
+sticker_violations_monthly = merged_sticker_violations[merged_sticker_violations['violation_code'].isin(['012345'])][['issue_date','violation_code', 'ticket_queue']]
+sticker_violations_monthly['issue_date'] = pd.to_datetime(sticker_violations_monthly['issue_date'])
+
+# Monthly aggregation
+sticker_violations_dt = sticker_violations_monthly.groupby(sticker_violations_monthly['issue_date'].dt.to_period('M').dt.to_timestamp()).size().reset_index(name="count")
+```
+
+
+Then, using Altair, plot the numberof tickets over time.
+
+```{python}
+
+# Create the chart
+chart = alt.Chart(sticker_violations_dt).mark_line(point=True).encode(
+    x=alt.X('yearmonth(issue_date):T', 
+            title='Date',
+            axis=alt.Axis(format='%b %Y', labelAngle=-45, labelOverlap=False)),
+    y=alt.Y('count:Q', 
+            title='Number of Violations',
+            scale=alt.Scale(zero=False))
+).properties(
+    title='Monthly Sticker Violations',
+    width=800,
+    height=400
+).interactive()
+
+# Display the chart
+chart
+```
+
+
+2.2
+Suppose that your reader wants to be able to use the plot to deduce when the price
+increase occurred. Add frequent or custom date labels on the x-axis of your plot such
+that the date of the price increase is readily apparent. We haven’t covered Altair’s
+date labeling features in class so you’ll first need to find the relevant help page in the
+documentation. Which help page did you use?
+
+```{python}
+
+price_increase_line = alt.Chart(pd.DataFrame({'date': ['2012-01-01']})).mark_rule(
+    color='red',
+    strokeWidth=2
+).encode(
+    x='yearmonth(date):T'
+)
+
+# Combine the charts
+final_chart = chart + price_increase_line
+
+final_chart
+```
+
+I used the altair website guide in mark_rule section and applied the logic
+https://altair-viz.github.io/gallery/bar_chart_with_mean_line.html
+
+
+2.3 
+```{python}
+sticker_violations_2011 = (sticker_violations_dt[sticker_violations_dt['issue_date'].dt.year == 2011])
+
+sticker_violations_2011['count'].sum()
+```
+
+There were 1935 observations
+
+```{python}
+prediction = 1935 * 100 * (80)
+print(f'They should have predicted an increase of  {prediction} USD in revenue')
+```
+
+*need to add some commas
+
+2.4
+What happened to repayment rates (percentage of tickets issued that had payments
+made) on this type of ticket in the calendar year after the price increase went into effect?
+
+```{python}
+sticker_violations_2012 = sticker_violations_monthly[sticker_violations_monthly['issue_date'].dt.year == 2012]
+
+issued_2012 = sticker_violations_2012['ticket_queue'].count()
+
+print(issued_2012)
+# Count paid tickets for 2012
+paid_2012 = sticker_violations_2012[sticker_violations_2012["ticket_queue"] == "Paid"]['ticket_queue'].count()
+
+# Calculate ticket payment rate
+ticket_pay_rate = (paid_2012 / issued_2012) * 100
+
+# Calculate ticket payment rate
+ticket_pay_rate = (paid_2012 /issued_2012) * 100
+
+print(ticket_pay_rate)
+
+```
+
+Suppose for a moment that the number of tickets issued was unchanged after the price
+increase. Using the new repayment rates in the year after the price increase occurred,
+what would the change in revenue have been?
+
+```{python}
+change equation
+
+```
+
+2.5
+Make a plot with the repayment rates on “missing city sticker” tickets and a vertical line
+at when the new policy was introduced. Interpret.
+
+```{python}
+
+```
+
+2.6
+Suppose that the City Clerk were committed to getting more revenue from tickets. What
+three violation types would you as an analyst have recommended they increase the price
+of? Consider both the number of tickets issued for each violation type and the repayment
+rate for each violation type. You may assume there is no behavioral response to price
+changes (ie. people continue to commit violations at the same rate and repay at the same
+rate). Make a plot to support your argument and explain in writing why it supports
+your argument.
