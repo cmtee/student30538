@@ -71,7 +71,9 @@ The old code is:0976170
 The new code:0964125 and 964125B
 
 ```{python}
-filtered_violations = df[df['violation_description'].str.contains('NO CITY STICKER')]
+# Filtering for anything that contains "NO STICKER"
+filtered_violations = df[df['violation_description'].str.contains(
+    'NO CITY STICKER')]
 
 # Get the unique violation codes
 violation_codes = filtered_violations['violation_code'].unique().tolist()
@@ -84,13 +86,19 @@ From this, I see that 0976170 is a different code number.
 
 ## 1.4
 ```{python}
-violation_fines = filtered_violations[filtered_violations['violation_code'].isin(['0964125', '0964125B', '976170'])][['issue_date', 'violation_code', 'fine_level1_amount', 'fine_level2_amount']]
+# New df filtered for violation codes for no sticker, retaining issue date, violation code, fine levels
+violation_fines = filtered_violations[filtered_violations['violation_code'].isin(
+    ['0964125', '0964125B', '976170'])][['issue_date', 'violation_code', 'fine_level1_amount', 'fine_level2_amount']]
 print(violation_fines)
 
-violation_fines_descending = violation_fines.sort_values(by = 'fine_level2_amount', ascending = False)
+# Putting it in descending order to check for new rate
+violation_fines_descending = violation_fines.sort_values(
+    by='fine_level2_amount', ascending=False)
 print(violation_fines_descending)
 
-violation_fines_ascending = violation_fines.sort_values(by = 'fine_level2_amount')
+# Putting it in descending order to check for old rate
+violation_fines_ascending = violation_fines.sort_values(
+    by='fine_level2_amount')
 print(violation_fines_ascending)
 ```
 
@@ -107,7 +115,7 @@ The new fine value for level2 is 400
 # Creating a new value to combine the sticker violation
 merged_sticker_violations = df.copy()
 
-# Replace the specified codes with the new code
+# Replace the 2 diff sticker violation codes with the new code
 merged_sticker_violations['violation_code'] = merged_sticker_violations['violation_code'].replace({
     '0976170': '012345',
     '0964125': '012345',
@@ -120,11 +128,16 @@ print(merged_sticker_violations)
 Collapse the data to capture the number of missing city sticker tickets by month
 
 ```{python}
-sticker_violations_monthly = merged_sticker_violations[merged_sticker_violations['violation_code'].isin(['012345'])][['issue_date','violation_code', 'ticket_queue']]
-sticker_violations_monthly['issue_date'] = pd.to_datetime(sticker_violations_monthly['issue_date'])
+# New df with the new violation code, retaining issue date, violation code and ticket queue columns
+
+sticker_violations_monthly = merged_sticker_violations[merged_sticker_violations['violation_code'].isin(
+    ['012345'])][['issue_date', 'violation_code', 'ticket_queue']]
+sticker_violations_monthly['issue_date'] = pd.to_datetime(
+    sticker_violations_monthly['issue_date'])
 
 # Monthly aggregation
-sticker_violations_dt = sticker_violations_monthly.groupby(sticker_violations_monthly['issue_date'].dt.to_period('M').dt.to_timestamp()).size().reset_index(name="count")
+sticker_violations_dt = sticker_violations_monthly.groupby(
+    sticker_violations_monthly['issue_date'].dt.to_period('M').dt.to_timestamp()).size().reset_index(name="count")
 ```
 
 
@@ -132,7 +145,7 @@ Then, using Altair, plot the numberof tickets over time.
 
 ```{python}
 
-# Create the chart
+# Plotting itckets over time
 chart = alt.Chart(sticker_violations_dt).mark_line(point=True).encode(
     x=alt.X('yearmonth(issue_date):T', 
             title='Date',
@@ -159,7 +172,7 @@ date labeling features in class so you’ll first need to find the relevant help
 documentation. Which help page did you use?
 
 ```{python}
-
+# Adding the price increase line
 price_increase_line = alt.Chart(pd.DataFrame({'date': ['2012-01-01']})).mark_rule(
     color='red',
     strokeWidth=2
@@ -167,7 +180,7 @@ price_increase_line = alt.Chart(pd.DataFrame({'date': ['2012-01-01']})).mark_rul
     x='yearmonth(date):T'
 )
 
-# Combine the charts
+# Combining the charts
 final_chart = chart + price_increase_line
 
 final_chart
@@ -179,7 +192,9 @@ https://altair-viz.github.io/gallery/bar_chart_with_mean_line.html
 
 2.3 
 ```{python}
-sticker_violations_2011 = (sticker_violations_dt[sticker_violations_dt['issue_date'].dt.year == 2011])
+# Folter
+sticker_violations_2011 = (
+    sticker_violations_dt[sticker_violations_dt['issue_date'].dt.year == 2011])
 
 sticker_violations_2011['count'].sum()
 ```
@@ -188,7 +203,8 @@ There were 1935 observations
 
 ```{python}
 prediction = 1935 * 100 * (80)
-print(f'They should have predicted an increase of  {prediction} USD in revenue')
+print(
+    f'They should have predicted an increase of  {prediction} USD in revenue')
 ```
 
 *need to add some commas
@@ -198,31 +214,34 @@ What happened to repayment rates (percentage of tickets issued that had payments
 made) on this type of ticket in the calendar year after the price increase went into effect?
 
 ```{python}
-sticker_violations_2012 = sticker_violations_monthly[sticker_violations_monthly['issue_date'].dt.year == 2012]
+sticker_violations_2013 = sticker_violations_monthly[
+    sticker_violations_monthly['issue_date'].dt.year == 2013]
 
-issued_2012 = sticker_violations_2012['ticket_queue'].count()
+issued_2013 = sticker_violations_2013['ticket_queue'].count()
 
-print(issued_2012)
-# Count paid tickets for 2012
-paid_2012 = sticker_violations_2012[sticker_violations_2012["ticket_queue"] == "Paid"]['ticket_queue'].count()
+print(issued_2013)
+# Count paid tickets for 2013
+paid_2013 = sticker_violations_2013[sticker_violations_2013["ticket_queue"]
+                                    == "Paid"]['ticket_queue'].count()
 
 # Calculate ticket payment rate
-ticket_pay_rate = (paid_2012 / issued_2012) * 100
+ticket_pay_rate_2013 = (paid_2013 / issued_2013) * 100
 
 # Calculate ticket payment rate
-ticket_pay_rate = (paid_2012 /issued_2012) * 100
+ticket_pay_rate_2013 = (paid_2013 / issued_2013) * 100
 
-print(ticket_pay_rate)
+print(round(40.59213089209194,2))
 
 ```
+
+The ticket pay rate is 40.59% in 2013.
 
 Suppose for a moment that the number of tickets issued was unchanged after the price
 increase. Using the new repayment rates in the year after the price increase occurred,
 what would the change in revenue have been?
 
 ```{python}
-change equation
-
+# 2011 number of tickets 
 ```
 
 2.5
