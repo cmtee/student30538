@@ -36,7 +36,7 @@ warnings.filterwarnings('ignore')
 Reading in one percent sample 
 ```{python}
 # Reading in file
-file_path = r'C:\Users\clari\OneDrive\Documents\Python II\ppha30538_fall2024\problem_sets\ps2\data\parking_tickets_one_percent.csv'
+file_path = r'C:\Users\clari\OneDrive\Documents\Python II\student30538\problem_sets\ps2\data\parking_tickets_one_percent.csv'
 df = pd.read_csv(file_path)
 ```
 
@@ -146,7 +146,7 @@ Then, using Altair, plot the numberof tickets over time.
 ```{python}
 
 # Plotting itckets over time
-chart = alt.Chart(sticker_violations_dt).mark_line(point=True).encode(
+total_sticker_violations = alt.Chart(sticker_violations_dt).mark_line(point=True).encode(
     x=alt.X('yearmonth(issue_date):T', 
             title='Date',
             axis=alt.Axis(format='%b %Y', labelAngle=-45, labelOverlap=False)),
@@ -160,7 +160,7 @@ chart = alt.Chart(sticker_violations_dt).mark_line(point=True).encode(
 ).interactive()
 
 # Display the chart
-chart
+total_sticker_violations
 ```
 
 
@@ -172,18 +172,46 @@ date labeling features in class so you’ll first need to find the relevant help
 documentation. Which help page did you use?
 
 ```{python}
-# Adding the price increase line
-price_increase_line = alt.Chart(pd.DataFrame({'date': ['2012-01-01']})).mark_rule(
+# Adding the price increase line at Feb 25, 2024. This is based on the data, where
+# we see that 02/25 is the first date of issue with the new code and 02/24 of the previous year
+# was the last day of issue using the old code.
+base_chart = alt.Chart(sticker_violations_dt).mark_line(point=True).encode(
+    x=alt.X('yearmonth(issue_date):T', 
+            title='Date',
+            axis=alt.Axis(format='%b %Y', labelAngle=-45, labelOverlap=False)),
+    y=alt.Y('count:Q', 
+            title='Number of Violations',
+            scale=alt.Scale(zero=False))
+)
+
+# Create a vertical line for Feb 25, 2012
+vertical_line = alt.Chart(pd.DataFrame({'date': ['2012-02-25']})).mark_rule(
     color='red',
     strokeWidth=2
 ).encode(
     x='yearmonth(date):T'
 )
 
-# Combining the charts
-final_chart = chart + price_increase_line
+# Create a label for the vertical line
+label = alt.Chart(pd.DataFrame({'date': ['2012-02-25'], 'label': ['Feb 25, 2012']})).mark_text(
+    align='left',
+    baseline='bottom',
+    dy=-150  # Adjust this value to position the label vertically
+).encode(
+    x='yearmonth(date):T',
+    text='label'
+)
 
-final_chart
+# Combine all elements
+total_sticker_violations = (base_chart + vertical_line + label).properties(
+    title='Monthly Sticker Violations',
+    width=800,
+    height=400
+).interactive()
+
+# Display the chart
+total_sticker_violations
+
 ```
 
 I used the altair website guide in mark_rule section and applied the logic
@@ -197,22 +225,23 @@ sticker_violations_2011 = (
     sticker_violations_dt[sticker_violations_dt['issue_date'].dt.year == 2011])
 
 sticker_violations_2011['count'].sum()
+
 ```
 
 There were 1935 observations
 
+https://sparkbyexamples.com/pandas/pandas-filter-dataframe-rows-on-dates/#:~:text=Filter%20Rows%20by%20Dates%20in%20Pandas%20DataFrame,-If%20you%20have&text=to_datetime()%20you%20can%20just,data%20type%20of%20all%20columns.
+
+
 ```{python}
-prediction = 1935 * 100 * (80)
+prediction_2011 = 1935 * 100 * (80)
 print(
-    f'They should have predicted an increase of  {prediction} USD in revenue')
+    f'They should have predicted an increase of {prediction_2011} USD in revenue')
 ```
 
 *need to add some commas
 
 2.4
-What happened to repayment rates (percentage of tickets issued that had payments
-made) on this type of ticket in the calendar year after the price increase went into effect?
-
 ```{python}
 sticker_violations_2013 = sticker_violations_monthly[
     sticker_violations_monthly['issue_date'].dt.year == 2013]
@@ -236,21 +265,78 @@ print(round(40.59213089209194,2))
 
 The ticket pay rate is 40.59% in 2013.
 
-Suppose for a moment that the number of tickets issued was unchanged after the price
-increase. Using the new repayment rates in the year after the price increase occurred,
-what would the change in revenue have been?
-
 ```{python}
-# 2011 number of tickets 
+# Using the 2011 number of tickets issued = 1935
+prediction_2013_repayment_rate = 1935 * 40.59 *100
+prediction_2013_repayment_rate = '{:,.2f}'.format(prediction_2013_repayment_rate)
+
+
+print(f'Assuming the number of tickets issued remained the same '
+      f'while we use the 2013 repayment rate, then the revenue '
+      f'change should have been predicted to be ${prediction_2013_repayment_rate}')
 ```
 
 2.5
-Make a plot with the repayment rates on “missing city sticker” tickets and a vertical line
-at when the new policy was introduced. Interpret.
+Make a plot with the repayment rates on “missing city sticker” tickets and a vertical line at when the new policy was introduced. Interpret.
 
 ```{python}
 
+# Creating a loop function to get the repayment rates
+years = range(sticker_violations_monthly['issue_date'].dt.year.min(), 
+              sticker_violations_monthly['issue_date'].dt.year.max() + 1)
+
+repayment_rates = []
+
+for year in years:
+    sticker_violations_year = sticker_violations_monthly[
+        sticker_violations_monthly['issue_date'].dt.year == year]
+    
+    issued = sticker_violations_year['ticket_queue'].count()
+    paid = sticker_violations_year[sticker_violations_year["ticket_queue"] == "Paid"]['ticket_queue'].count()
+    
+    repayment_rate = (paid / issued) * 100 if issued > 0 else 0
+    repayment_rates.append({'year': year, 'repayment_rate': repayment_rate})
+
+# Create DataFrame from the results
+df_repayment = pd.DataFrame(repayment_rates)
+
 ```
+
+```{python}
+# Create the Altair chart
+repayment_rates_chart = alt.Chart(df_repayment).mark_line(point=True).encode(
+    x=alt.X('year:O', title='Year'),
+    y=alt.Y('repayment_rate:Q', title='Repayment Rate (%)', scale=alt.Scale(zero=False)),
+    tooltip=['year', alt.Tooltip('repayment_rate:Q', format='.2f')]
+).properties(
+    title='Repayment Rates for "Missing City Sticker" Tickets',
+    width=800,
+    height=400
+)
+
+# Add vertical line for policy introduction (assuming it was introduced in 2012)
+policy_line = alt.Chart(pd.DataFrame({'year': [2012]})).mark_rule(color='red').encode(
+    x='year:O'
+)
+
+# Add text annotation for the policy line
+policy_text = alt.Chart(pd.DataFrame({'year': [2012], 'text': ['New Policy Introduced']})).mark_text(
+    align='left',
+    baseline='top',
+    dx=5,
+    dy=-5
+).encode(
+    x='year:O',
+    text='text'
+)
+
+# Combine the chart elements
+repayment_rates_chart = (repayment_rates_chart + policy_line + policy_text).interactive()
+
+# Display the chart
+repayment_rates_chart
+```
+
 
 2.6
 Suppose that the City Clerk were committed to getting more revenue from tickets. What
@@ -260,3 +346,44 @@ rate for each violation type. You may assume there is no behavioral response to 
 changes (ie. people continue to commit violations at the same rate and repay at the same
 rate). Make a plot to support your argument and explain in writing why it supports
 your argument.
+
+
+```{python}
+# Calculate the issue count and repayment rates
+total_tickets = df['violation_description'].value_counts().reset_index()
+total_tickets.columns = ['violation_description', 'total_tickets']
+
+repayment_rates_by_type = df.groupby('violation_description').apply(
+    lambda x: (x['ticket_queue'] == 'Paid').sum() / len(x) * 100
+).reset_index()
+repayment_rates_by_type.columns = ['violation_description', 'repayment_rate']
+
+# Merge the issue counts with repayment rates
+result = pd.merge(total_tickets, repayment_rates_by_type, on='violation_description')
+
+# Calculate expected revenue
+result['expected_revenue'] = result['total_tickets'] * result['repayment_rate']
+
+# Format the table
+final_table = result[['violation_description', 'total_tickets', 'repayment_rate', 'expected_revenue']]
+final_table['repayment_rate'] = final_table['repayment_rate'].round(2)
+final_table['expected_revenue'] = final_table['expected_revenue'].round(2)
+
+# Sort by expected revenue in descending order
+final_table = final_table.sort_values('expected_revenue', ascending=False)
+
+# Display the final table
+print(final_table)
+
+final_table['expected_revenue'] = final_table['expected_revenue'].astype(float)
+
+# Find the row with the highest expected revenue
+highest_revenue_row = final_table.loc[final_table['expected_revenue'].idxmax()]
+
+# Get the name of the violation with the highest expected revenue
+highest_revenue_violation = highest_revenue_row['violation_description']
+
+print(f"The violation with the highest expected revenue is: {highest_revenue_violation}")
+print(f"Details of this violation:")
+print(highest_revenue_row)
+```
