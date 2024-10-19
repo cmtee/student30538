@@ -3,7 +3,7 @@ title: "30538 Problem Set 2: Parking Tickets"
 author: "Your Name Here"
 date: "the date"
 format: 
-    pdf: 
+    html: 
         include-in-header:
             text: |
                 \usepackage{fvextra}
@@ -239,7 +239,7 @@ print(
     f'They should have predicted an increase of {prediction_2011} USD in revenue')
 ```
 
-*need to add some commas
+They should have predicted an increase of 15,480,000 USD in revenue
 
 2.4
 ```{python}
@@ -256,8 +256,6 @@ paid_2013 = sticker_violations_2013[sticker_violations_2013["ticket_queue"]
 # Calculate ticket payment rate
 ticket_pay_rate_2013 = (paid_2013 / issued_2013) * 100
 
-# Calculate ticket payment rate
-ticket_pay_rate_2013 = (paid_2013 / issued_2013) * 100
 
 print(round(40.59213089209194,2))
 
@@ -266,15 +264,40 @@ print(round(40.59213089209194,2))
 The ticket pay rate is 40.59% in 2013.
 
 ```{python}
-# Using the 2011 number of tickets issued = 1935
-prediction_2013_repayment_rate = 1935 * 40.59 *100
-prediction_2013_repayment_rate = '{:,.2f}'.format(prediction_2013_repayment_rate)
+# COunting the 2011 number of tickets issued
+sticker_violations_2011 = sticker_violations_monthly[
+    sticker_violations_monthly['issue_date'].dt.year == 2011]
 
+issued_2011 = sticker_violations_2011['ticket_queue'].count() * 100
+print(f'Tickets issued in 2011 were {issued_2011}')
 
-print(f'Assuming the number of tickets issued remained the same '
-      f'while we use the 2013 repayment rate, then the revenue '
-      f'change should have been predicted to be ${prediction_2013_repayment_rate}')
+# Count paid tickets for 2011
+paid_2011 = sticker_violations_2011[sticker_violations_2011["ticket_queue"]
+                                    == "Paid"]['ticket_queue'].count() * 100
+
+# Calculate ticket payment rate 2011
+ticket_pay_rate_2011 = round((paid_2011 / issued_2011) * 100,2)
+
+print(f'The ticket pay rate in 2011 was {ticket_pay_rate_2011}')
+
+# Change in repayment rate
+repayment_rate_change = round(ticket_pay_rate_2011 - ticket_pay_rate_2013,2)
+print(f'The change in repayment rater is {repayment_rate_change}')
+
+revenue_change_2011_2013 = (193500 * .4059 * 200)-(193500 * .5395 * 120)
+formatted_revenue_change_2011_2013 = '{:,.2f}'.format(revenue_change_2011_2013)
+revenue_2013 = 193500 * .4059 * 200
+
+print(f"The revenue change between 2011 and 2013 was an increase of ${formatted_revenue_change_2011_2013}")
+print (f'The predicted revenue for 2013 would be {revenue_2013} USD')
 ```
+
+Tickets issued in 2011 were 193500
+The ticket pay rate in 2011 was 53.95
+The change in repayment rater is 13.36
+The revenue change between 2011 and 2013 was an increase of $3,181,140.00
+The predicted revenue for 2013 would be 15708329.99 USD
+
 
 2.5
 Make a plot with the repayment rates on “missing city sticker” tickets and a vertical line at when the new policy was introduced. Interpret.
@@ -359,13 +382,15 @@ repayment_rates_by_type = df.groupby('violation_description').apply(
 repayment_rates_by_type.columns = ['violation_description', 'repayment_rate']
 
 # Merge the issue counts with repayment rates
-result = pd.merge(total_tickets, repayment_rates_by_type, on='violation_description')
+result = pd.merge(total_tickets, repayment_rates_by_type,
+                  on='violation_description')
 
 # Calculate expected revenue
 result['expected_revenue'] = result['total_tickets'] * result['repayment_rate']
 
 # Format the table
-final_table = result[['violation_description', 'total_tickets', 'repayment_rate', 'expected_revenue']]
+final_table = result[['violation_description',
+                      'total_tickets', 'repayment_rate', 'expected_revenue']]
 final_table['repayment_rate'] = final_table['repayment_rate'].round(2)
 final_table['expected_revenue'] = final_table['expected_revenue'].round(2)
 
@@ -383,7 +408,121 @@ highest_revenue_row = final_table.loc[final_table['expected_revenue'].idxmax()]
 # Get the name of the violation with the highest expected revenue
 highest_revenue_violation = highest_revenue_row['violation_description']
 
-print(f"The violation with the highest expected revenue is: {highest_revenue_violation}")
+print(
+    f"The violation with the highest expected revenue is: {highest_revenue_violation}")
 print(f"Details of this violation:")
 print(highest_revenue_row)
 ```
+
+The violation that would earn the city the most money, given the numnber of 
+tickets issued and the repayment rate is EXPIRED PLATES OR TEMPORARY REGISTRATION.
+This will lead to an expected revenue of $2,708,200.0
+
+```{python}
+# Select the top 10 violations by expected revenue
+top_10 = final_table.nlargest(10, 'expected_revenue')
+
+# Create a color scheme for the top 3
+top_3_violations = top_10.nlargest(3, 'expected_revenue')['violation_description'].tolist()
+domain = top_3_violations + ['Other']
+range_ = ['red', 'green', 'blue', 'lightgray']
+
+# Create the scatter plot
+chart = alt.Chart(top_10).mark_circle(size=100).encode(
+    x=alt.X('violation_description:N', 
+            sort='-y', 
+            title='Violation Type',
+            axis=alt.Axis(labelAngle=-45)),  
+    y=alt.Y('expected_revenue:Q', 
+            title='Expected Revenue ($)'),
+    color=alt.Color('violation_description:N',
+                    scale=alt.Scale(domain=domain, range=range_),
+                    legend=alt.Legend(title="Violation Description")),
+    tooltip=['violation_description:N', 'expected_revenue:Q']
+).properties(
+    width=800,
+    height=400,
+    title='Top 10 Violation Types by Expected Revenue'
+)
+
+# Display the chart
+chart
+
+
+```
+
+3.
+
+```{python}
+df['is_paid'] = df['total_payments'] > 0
+
+violation_summary = df.groupby('violation_description').agg(
+    total_tickets=('violation_description', 'size'),  # Count total tickets
+    fraction_paid=('is_paid', 'mean'),  # Fraction of tickets that were paid
+    avg_fine_level1=('fine_level1_amount', 'mean')  # Average fine level 1 amount
+).reset_index()
+
+violation_summary = violation_summary.sort_values(by='total_tickets', ascending=False)
+
+top_5_violation_summary = violation_summary.head(5)
+
+print(top_5_violation_summary)
+
+violation_summary
+
+```
+
+
+```{python}
+# Step 1: Filter for violations that appear at least 100 times
+violation_summary_filtered = violation_summary[violation_summary['total_tickets'] >= 100]
+
+# Step 2: Remove the outlier by excluding the violation with the highest average fine
+outlier_violation = violation_summary_filtered['avg_fine_level1'].idxmax()
+violation_summary_filtered = violation_summary_filtered.drop(outlier_violation)
+
+```
+
+
+
+```{python}
+# Step 3: Create the scatter plot
+# Scatter plot of fine amount vs. fraction paid
+scatter = alt.Chart(violation_summary_filtered).mark_point().encode(
+    x=alt.X('avg_fine_level1:Q', title='Average Fine Level 1 ($)'),
+    y=alt.Y('fraction_paid:Q', title='Fraction of Tickets Paid'),
+    tooltip=['violation_description', 'total_tickets', 'avg_fine_level1', 'fraction_paid']
+).properties(
+    title='Relationship Between Fine Amount and Fraction of Tickets Paid'
+)
+
+scatter.display()
+```
+
+
+```{python}
+alt.Chart(violation_summary_filtered).mark_boxplot().encode(
+    x=alt.X('avg_fine_level1:Q', title='Average Fine Level 1 ($)'),
+    y=alt.Y('fraction_paid:Q', title='Fraction of Tickets Paid'),
+    tooltip=['violation_description', 'total_tickets', 'avg_fine_level1', 'fraction_paid']
+).properties(
+    title='Relationship Between Fine Amount and Fraction of Tickets Paid'
+)
+
+```
+
+
+```{python}
+ alt.Chart(violation_summary_filtered).mark_bar().encode(
+   x=alt.X('avg_fine_level1:Q', title='Average Fine Level 1 ($)'),
+    y=alt.Y('fraction_paid:Q', title='Fraction of Tickets Paid'),
+    tooltip=['violation_description', 'total_tickets', 'avg_fine_level1', 'fraction_paid']
+).properties(
+    title='Relationship Between Fine Amount and Fraction of Tickets Paid'
+)
+```
+
+
+On the one hand, the boxplot contains a lot of granular and detailed information. On the other hand, I would likely still recommend the scatterplot. It contains what is, in my opinion, the easiest to discern relationship between how fine levels affect amount of tickets paid. 
+We see a weak negative correlation, telling us that as fine level increases, ticket payment gradually decreases. While this is perhaps the best 'at-a-glance' data, it's not the most nuanced. There will always be trade-offs with different data styles, but the scatterplot 
+prioritizes readability.  
