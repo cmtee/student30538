@@ -296,6 +296,14 @@ Are penguins getting heavier (`body_mass_g`) over time?
 
 Bonus: what is the headline of your plot and what are the sub-messages?
 
+```{python}
+alt.Chart(penguins).mark_boxplot().encode(
+  alt.Y('average(body_mass_g):Q',  scale=alt.Scale(zero=False)),
+  alt.X('year:N'),
+  alt.Color('year:N')
+)
+```
+
 <!-- ZZZ delete before posting -->
 ## Do-pair-share solution I
 
