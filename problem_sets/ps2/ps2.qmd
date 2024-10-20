@@ -1,19 +1,11 @@
 ---
-title: "ps2_answers"
+title: "ps2"
+geometry: 
+  - margin=0.75in
+fontsize: 10pt
 format: 
-  pdf:
-    include-in-header: 
-       text: |
-         \usepackage{fvextra}
-         \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
-include-before-body:
-  text: |
-    \RecustomVerbatimEnvironment{verbatim}{Verbatim}{
-      showspaces = false,
-      showtabs = false,
-      breaksymbolleft={},
-      breaklines
-    }
+  html:
+    theme: "default"
 ---
 1. "This submission is my work alone and complies with the 30538 integrity
 policy." Add your initials to indicate your agreement: *CT*
@@ -32,6 +24,7 @@ from vega_datasets import data as vega_data
 import warnings 
 warnings.filterwarnings('ignore')
 ```
+
 ### Data cleaning continued (15 points)
 
 Reading in one percent sample 
@@ -41,7 +34,7 @@ file_path = r'C:\Users\clari\OneDrive\Documents\Python II\student30538\problem_s
 df = pd.read_csv(file_path)
 ```
 
-## 1.1
+1.1
 Function to create a 2 col dataframe (COl1 = variable name, col2 = num of times the col is NA)
 ```{python}
 def count_nas(df):
@@ -55,7 +48,7 @@ print(two_col_df)
 
 https://saturncloud.io/blog/how-to-count-the-number-of-missingnan-values-in-each-row-in-python-pandas/#:~:text=(axis%3D1)-,To%20count%20the%20number%20of%20missing%2FNaN%20values%20in%20each,True%20values%20in%20each%20row.
 
-## 1.2
+1.2
 Three variables are missing much more frequently than the others. Why? (Hint: look at some rows and read the data dictionary written by ProPublica)
 
 ```{python}
@@ -66,7 +59,7 @@ print(descending_two_col_df)
 Hearing disposition (259899), notice _level (84068), and zipcode(54115) tend to have the most NA Values
 [EXPLAIN WHY]
 
-## 1.3
+1.3
 Through visual inspection:
 The old code is:0964125
 The new code: 964125B
@@ -84,8 +77,7 @@ print(violation_codes)
 ```
 
 From this, I see that 0976170 is a different code number.
-
-## 1.4
+1.4
 ```{python}
 # New df filtered for violation codes for no sticker, retaining issue date, violation code, fine levels
 violation_fines = filtered_violations[filtered_violations['violation_code'].isin(
@@ -96,17 +88,9 @@ print(violation_fines)
 violation_fines_descending = violation_fines.sort_values(
     by='fine_level1_amount', ascending=False)
 print(violation_fines_descending)
-
-# Putting it in ascending order to check for old rate
-violation_fines_ascending = violation_fines.sort_values(
-    by='fine_level1_amount')
-print(violation_fines_ascending)
 ```
 
-The old fine value for level1 is 120
-The new fine value for level1 is 200
-The old fine value for level2 is 240
-The new fine value for level2 is 400
+The old fine value for level1 is 120. The new fine value for level1 is 200. The old fine value for level2 is 240.The new fine value for level2 is 400
 
 ### Revenue increase from “missing city sticker” tickets (20 Points)
 
@@ -122,8 +106,6 @@ merged_sticker_violations['violation_code'] = merged_sticker_violations['violati
     '0964125': '012345',
     '0964125B': '012345'
 })
-
-print(merged_sticker_violations)
 ```
 
 Collapse the data to capture the number of missing city sticker tickets by month
@@ -161,7 +143,6 @@ total_sticker_violations = alt.Chart(sticker_violations_dt).mark_line(point=True
 # Display the chart
 total_sticker_violations
 ```
-
 
 2.2
 ```{python}
@@ -239,8 +220,6 @@ sticker_violations_2013 = sticker_violations_monthly[
     sticker_violations_monthly['issue_date'].dt.year == 2013]
 
 issued_2013 = sticker_violations_2013['ticket_queue'].count()
-
-print(issued_2013)
 # Count paid tickets for 2013
 paid_2013 = sticker_violations_2013[sticker_violations_2013["ticket_queue"]
                                     == "Paid"]['ticket_queue'].count()
@@ -485,7 +464,7 @@ box__fine_repayment.display()
 # Bar graph
 bar_fine_repayment = alt.Chart(violation_summary_selected_100).mark_bar().encode(
     x=alt.X('avg_fine_level1:Q', title='Average Level 1 Fine ($)'),
-    y=alt.Y('repayment_rate:Q', title='Repayment Rate', scale=alt.Scale(domain=[0.1, 0.9])),
+    y=alt.Y('repayment_rate:Q', title='Repayment Rate'),
     tooltip=['violation_description', 'total_tickets', 'avg_fine_level1', 'repayment_rate']
 ).properties(
     title='Relationship Between Fine Amount and Repayment Rate'
@@ -541,8 +520,9 @@ print(non_double_fine_increase)
 
 4.2
 Attacking image (tip from Vitor)
-![ticket_queue](ticket.jpg)
-![notice_level](notice_level.jpg)
+![ticket_queue](notice_level.jpg)
+![notice_level](ticket.jpg)
+
 https://www.chicago.gov/city/en/depts/fin/supp_info/revenue/parking_and_red-lightnoticeinformation5/violation_status.html
 
 4.3 Making a scatterplot with labels
@@ -583,7 +563,6 @@ scatter_legend.display()
 Revising the plots
 ```{python}
 # The top 10 violations are in the top_10 df
-print(top_10)
 # Label the top 10 violations and mark others as 'Other'
 violation_summary_selected_100['violation_label'] = violation_summary_selected_100['violation_description'].where(
     violation_summary_selected_100['violation_description'].isin(top_10['violation_description']),

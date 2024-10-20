@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>ps2</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="ps2_files/libs/clipboard/clipboard.min.js"></script>
+<script src="ps2_files/libs/quarto-html/quarto.js"></script>
+<script src="ps2_files/libs/quarto-html/popper.min.js"></script>
+<script src="ps2_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="ps2_files/libs/quarto-html/anchor.min.js"></script>
+<link href="ps2_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="ps2_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="ps2_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="ps2_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="ps2_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">ps2</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<ol type="1">
+<li>“This submission is my work alone and complies with the 30538 integrity policy.” Add your initials to indicate your agreement: <em>CT</em></li>
+<li>“I have uploaded the names of anyone I worked with on the problem set <strong><a href="https://docs.google.com/forms/d/1-zzHx762odGlpVWtgdIC55vqF-j3gqdAp6Pno1rIGK0/edit">here</a></strong>” **** (1 point)</li>
+<li>Late coins used this pset: **\1** Late coins left after submission: <em>2</em></li>
+</ol>
+<p>Integrity statement: I used AI to help me debug and organize my code.</p>
+<div id="6f8e56f9" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>alt.renderers.enable(<span class="st">"png"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> vega_datasets <span class="im">import</span> data <span class="im">as</span> vega_data</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">'ignore'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="data-cleaning-continued-15-points" class="level3">
+<h3 class="anchored" data-anchor-id="data-cleaning-continued-15-points">Data cleaning continued (15 points)</h3>
+<p>Reading in one percent sample</p>
+<div id="326d9f47" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reading in file</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>file_path <span class="op">=</span> <span class="vs">r'C:\Users\clari\OneDrive\Documents\Python II\student30538\problem_sets\ps2\data\parking_tickets_one_percent.csv'</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(file_path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>1.1 Function to create a 2 col dataframe (COl1 = variable name, col2 = num of times the col is NA)</p>
+<div id="b2bdca50" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> count_nas(df):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    na_counts <span class="op">=</span> df.isna().<span class="bu">sum</span>().reset_index()</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    na_counts.columns <span class="op">=</span> [<span class="st">'Variable'</span>, <span class="st">'NA_Count'</span>]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> na_counts.set_index(<span class="st">'Variable'</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>two_col_df <span class="op">=</span> count_nas(df)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(two_col_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                       NA_Count
+Variable                       
+Unnamed: 0                    0
+ticket_number                 0
+issue_date                    0
+violation_location            0
+license_plate_number          0
+license_plate_state          97
+license_plate_type         2054
+zipcode                   54115
+violation_code                0
+violation_description         0
+unit                         29
+unit_description              0
+vehicle_make                  0
+fine_level1_amount            0
+fine_level2_amount            0
+current_amount_due            0
+total_payments                0
+ticket_queue                  0
+ticket_queue_date             0
+notice_level              84068
+hearing_disposition      259899
+notice_number                 0
+officer                       0
+address                       0</code></pre>
+</div>
+</div>
+<p>https://saturncloud.io/blog/how-to-count-the-number-of-missingnan-values-in-each-row-in-python-pandas/#:~:text=(axis%3D1)-,To%20count%20the%20number%20of%20missing%2FNaN%20values%20in%20each,True%20values%20in%20each%20row.</p>
+<p>1.2 Three variables are missing much more frequently than the others. Why? (Hint: look at some rows and read the data dictionary written by ProPublica)</p>
+<div id="a4377d26" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>descending_two_col_df <span class="op">=</span> two_col_df.sort_values(by<span class="op">=</span><span class="st">'NA_Count'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(descending_two_col_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                       NA_Count
+Variable                       
+hearing_disposition      259899
+notice_level              84068
+zipcode                   54115
+license_plate_type         2054
+license_plate_state          97
+unit                         29
+Unnamed: 0                    0
+fine_level2_amount            0
+officer                       0
+notice_number                 0
+ticket_queue_date             0
+ticket_queue                  0
+total_payments                0
+current_amount_due            0
+vehicle_make                  0
+fine_level1_amount            0
+ticket_number                 0
+unit_description              0
+violation_description         0
+violation_code                0
+license_plate_number          0
+violation_location            0
+issue_date                    0
+address                       0</code></pre>
+</div>
+</div>
+<p>Hearing disposition (259899), notice _level (84068), and zipcode(54115) tend to have the most NA Values [EXPLAIN WHY]</p>
+<p>1.3 Through visual inspection: The old code is:0964125 The new code: 964125B</p>
+<div id="5514f867" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtering for anything that contains "NO STICKER"</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>filtered_violations <span class="op">=</span> df[df[<span class="st">'violation_description'</span>].<span class="bu">str</span>.contains(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'NO CITY STICKER'</span>)]</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the unique violation codes</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>violation_codes <span class="op">=</span> filtered_violations[<span class="st">'violation_code'</span>].unique().tolist()</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Violation codes for 'NO CITY STICKER':"</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(violation_codes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Violation codes for 'NO CITY STICKER':
+['0964125', '0976170', '0964125B', '0964125C']</code></pre>
+</div>
+</div>
+<p>From this, I see that 0976170 is a different code number. 1.4</p>
+<div id="c9c0a040" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># New df filtered for violation codes for no sticker, retaining issue date, violation code, fine levels</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>violation_fines <span class="op">=</span> filtered_violations[filtered_violations[<span class="st">'violation_code'</span>].isin(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    [<span class="st">'0964125'</span>, <span class="st">'0964125B'</span>, <span class="st">'976170'</span>])][[<span class="st">'issue_date'</span>, <span class="st">'violation_code'</span>, <span class="st">'fine_level1_amount'</span>, <span class="st">'fine_level2_amount'</span>]]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(violation_fines)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Putting it in descending order to check for new rate</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>violation_fines_descending <span class="op">=</span> violation_fines.sort_values(</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    by<span class="op">=</span><span class="st">'fine_level1_amount'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(violation_fines_descending)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 issue_date violation_code  fine_level1_amount  \
+14      2007-01-01 10:51:00        0964125                 120   
+29      2007-01-01 17:55:00        0964125                 120   
+82      2007-01-02 10:20:00        0964125                 120   
+97      2007-01-02 12:12:00        0964125                 120   
+104     2007-01-02 13:39:00        0964125                 120   
+...                     ...            ...                 ...   
+287420  2018-05-14 08:53:00       0964125B                 200   
+287440  2018-05-14 11:50:00       0964125B                 200   
+287441  2018-05-14 12:09:00       0964125B                 200   
+287450  2018-05-14 14:11:00       0964125B                 200   
+287452  2018-05-14 14:30:00       0964125B                 200   
+
+        fine_level2_amount  
+14                     240  
+29                     240  
+82                     240  
+97                     240  
+104                    240  
+...                    ...  
+287420                 400  
+287440                 400  
+287441                 400  
+287450                 400  
+287452                 400  
+
+[25004 rows x 4 columns]
+                 issue_date violation_code  fine_level1_amount  \
+157196  2012-11-15 19:01:00       0964125B                 200   
+202661  2014-08-31 17:07:00       0964125B                 200   
+202909  2014-09-04 08:21:00       0964125B                 200   
+202901  2014-09-04 01:42:00       0964125B                 200   
+202900  2014-09-04 01:23:00       0964125B                 200   
+...                     ...            ...                 ...   
+92736   2010-04-27 11:03:00        0964125                 120   
+92728   2010-04-27 09:59:00        0964125                 120   
+92711   2010-04-27 08:41:00        0964125                 120   
+92710   2010-04-27 08:36:00        0964125                 120   
+14      2007-01-01 10:51:00        0964125                 120   
+
+        fine_level2_amount  
+157196                 400  
+202661                 400  
+202909                 400  
+202901                 400  
+202900                 400  
+...                    ...  
+92736                  240  
+92728                  240  
+92711                  240  
+92710                  240  
+14                     240  
+
+[25004 rows x 4 columns]</code></pre>
+</div>
+</div>
+<p>The old fine value for level1 is 120. The new fine value for level1 is 200. The old fine value for level2 is 240.The new fine value for level2 is 400</p>
+</section>
+<section id="revenue-increase-from-missing-city-sticker-tickets-20-points" class="level3">
+<h3 class="anchored" data-anchor-id="revenue-increase-from-missing-city-sticker-tickets-20-points">Revenue increase from “missing city sticker” tickets (20 Points)</h3>
+<p>2.1 Using pandas, create a new value for violation codes which combines the two codes that you found in the previous question.</p>
+<div id="7d9e8d56" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating a new value to combine the sticker violation</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>merged_sticker_violations <span class="op">=</span> df.copy()</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace the 2 diff sticker violation codes with the new code</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>merged_sticker_violations[<span class="st">'violation_code'</span>] <span class="op">=</span> merged_sticker_violations[<span class="st">'violation_code'</span>].replace({</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'0976170'</span>: <span class="st">'012345'</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'0964125'</span>: <span class="st">'012345'</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'0964125B'</span>: <span class="st">'012345'</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Collapse the data to capture the number of missing city sticker tickets by month</p>
+<div id="21e67b63" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># New df with the new violation code, retaining issue date, violation code and ticket queue columns</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>sticker_violations_monthly <span class="op">=</span> merged_sticker_violations[merged_sticker_violations[<span class="st">'violation_code'</span>].isin(</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    [<span class="st">'012345'</span>])][[<span class="st">'issue_date'</span>, <span class="st">'violation_code'</span>, <span class="st">'ticket_queue'</span>]]</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>sticker_violations_monthly[<span class="st">'issue_date'</span>] <span class="op">=</span> pd.to_datetime(</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    sticker_violations_monthly[<span class="st">'issue_date'</span>])</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Monthly aggregation</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>sticker_violations_dt <span class="op">=</span> sticker_violations_monthly.groupby(</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    sticker_violations_monthly[<span class="st">'issue_date'</span>].dt.to_period(<span class="st">'M'</span>).dt.to_timestamp()).size().reset_index(name<span class="op">=</span><span class="st">"count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then, using Altair, plot the numberof tickets over time.</p>
+<div id="a1cb7947" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting itckets over time</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>total_sticker_violations <span class="op">=</span> alt.Chart(sticker_violations_dt).mark_line(point<span class="op">=</span><span class="va">True</span>).encode(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">'yearmonth(issue_date):T'</span>, </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>            title<span class="op">=</span><span class="st">'Date'</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>            axis<span class="op">=</span>alt.Axis(<span class="bu">format</span><span class="op">=</span><span class="st">'%b %Y'</span>, labelAngle<span class="op">=-</span><span class="dv">45</span>, labelOverlap<span class="op">=</span><span class="va">False</span>)),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">'count:Q'</span>, </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>            title<span class="op">=</span><span class="st">'Number of Violations'</span>,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>            scale<span class="op">=</span>alt.Scale(zero<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Monthly Sticker Violations'</span>,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">800</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">400</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>).interactive()</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the chart</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>total_sticker_violations</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="36">
+<div>
+<figure class="figure">
+<p><img src="ps2_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>2.2</p>
+<div id="c3725f8f" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding the price increase line at Feb 25, 2024. This is based on the data, where</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># we see that 02/25 is the first date of issue with the new code and 02/24 of the previous year</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># was the last day of issue using the old code.</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>base_chart <span class="op">=</span> alt.Chart(sticker_violations_dt).mark_line(point<span class="op">=</span><span class="va">True</span>).encode(</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">'yearmonth(issue_date):T'</span>, </span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>            title<span class="op">=</span><span class="st">'Date'</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>            axis<span class="op">=</span>alt.Axis(<span class="bu">format</span><span class="op">=</span><span class="st">'%b %Y'</span>, labelAngle<span class="op">=-</span><span class="dv">45</span>, labelOverlap<span class="op">=</span><span class="va">False</span>)),</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">'count:Q'</span>, </span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>            title<span class="op">=</span><span class="st">'Number of Violations'</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>            scale<span class="op">=</span>alt.Scale(zero<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a vertical line for Feb 25, 2012</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>vertical_line <span class="op">=</span> alt.Chart(pd.DataFrame({<span class="st">'date'</span>: [<span class="st">'2012-02-25'</span>]})).mark_rule(</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">'red'</span>,</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    strokeWidth<span class="op">=</span><span class="dv">2</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>).encode(</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">'yearmonth(date):T'</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a label for the vertical line</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>label <span class="op">=</span> alt.Chart(pd.DataFrame({<span class="st">'date'</span>: [<span class="st">'2012-02-25'</span>], <span class="st">'label'</span>: [<span class="st">'Feb 25, 2012'</span>]})).mark_text(</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    align<span class="op">=</span><span class="st">'left'</span>,</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    baseline<span class="op">=</span><span class="st">'bottom'</span>,</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    dy<span class="op">=-</span><span class="dv">150</span>  <span class="co"># Adjust this value to position the label vertically</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>).encode(</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">'yearmonth(date):T'</span>,</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    text<span class="op">=</span><span class="st">'label'</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine all elements</span></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>total_sticker_violations <span class="op">=</span> (base_chart <span class="op">+</span> vertical_line <span class="op">+</span> label).properties(</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Monthly Sticker Violations'</span>,</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">800</span>,</span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">400</span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>).interactive()</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the chart</span></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>total_sticker_violations</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<div>
+<figure class="figure">
+<p><img src="ps2_files/figure-html/cell-11-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>I used the altair website guide in mark_rule section and applied the logic https://altair-viz.github.io/gallery/bar_chart_with_mean_line.html</p>
+<p>To add text to the line: https://altair-viz.github.io/user_guide/marks/text.html</p>
+<p>2.3</p>
+<div id="e3e1e85a" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Folter</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>sticker_violations_2011 <span class="op">=</span> (</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    sticker_violations_dt[sticker_violations_dt[<span class="st">'issue_date'</span>].dt.year <span class="op">==</span> <span class="dv">2011</span>])</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>sticker_violations_2011[<span class="st">'count'</span>].<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="38">
+<pre><code>1935</code></pre>
+</div>
+</div>
+<p>There were 1935 observations (inluding code 0976170) https://sparkbyexamples.com/pandas/pandas-filter-dataframe-rows-on-dates/#:~:text=Filter%20Rows%20by%20Dates%20in%20Pandas%20DataFrame,-If%20you%20have&amp;text=to_datetime()%20you%20can%20just,data%20type%20of%20all%20columns.</p>
+<div id="b97f4e0f" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>prediction_2011 <span class="op">=</span> <span class="dv">1935</span> <span class="op">*</span> <span class="dv">100</span> <span class="op">*</span> (<span class="dv">80</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f'They should have predicted an increase of </span><span class="sc">{</span>prediction_2011<span class="sc">}</span><span class="ss"> USD in revenue'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>They should have predicted an increase of 15480000 USD in revenue</code></pre>
+</div>
+</div>
+<p>They should have predicted an increase of 15,480,000 USD in revenue</p>
+<p>2.4</p>
+<div id="6f5c2823" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>sticker_violations_2013 <span class="op">=</span> sticker_violations_monthly[</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    sticker_violations_monthly[<span class="st">'issue_date'</span>].dt.year <span class="op">==</span> <span class="dv">2013</span>]</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>issued_2013 <span class="op">=</span> sticker_violations_2013[<span class="st">'ticket_queue'</span>].count()</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Count paid tickets for 2013</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>paid_2013 <span class="op">=</span> sticker_violations_2013[sticker_violations_2013[<span class="st">"ticket_queue"</span>]</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>                                    <span class="op">==</span> <span class="st">"Paid"</span>][<span class="st">'ticket_queue'</span>].count()</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate ticket payment rate</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>ticket_pay_rate_2013 <span class="op">=</span> (paid_2013 <span class="op">/</span> issued_2013) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">round</span>(<span class="fl">40.59213089209194</span>,<span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>40.59</code></pre>
+</div>
+</div>
+<p>The ticket pay rate is 40.59% in 2013.</p>
+<div id="11525ff4" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># COunting the 2011 number of tickets issued</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>sticker_violations_2011 <span class="op">=</span> sticker_violations_monthly[</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    sticker_violations_monthly[<span class="st">'issue_date'</span>].dt.year <span class="op">==</span> <span class="dv">2011</span>]</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>issued_2011 <span class="op">=</span> sticker_violations_2011[<span class="st">'ticket_queue'</span>].count() <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Tickets issued in 2011 were </span><span class="sc">{</span>issued_2011<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Count paid tickets for 2011</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>paid_2011 <span class="op">=</span> sticker_violations_2011[sticker_violations_2011[<span class="st">"ticket_queue"</span>]</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>                                    <span class="op">==</span> <span class="st">"Paid"</span>][<span class="st">'ticket_queue'</span>].count() <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate ticket payment rate 2011</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>ticket_pay_rate_2011 <span class="op">=</span> <span class="bu">round</span>((paid_2011 <span class="op">/</span> issued_2011) <span class="op">*</span> <span class="dv">100</span>,<span class="dv">2</span>)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'The ticket pay rate in 2011 was </span><span class="sc">{</span>ticket_pay_rate_2011<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Change in repayment rate</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>repayment_rate_change <span class="op">=</span> <span class="bu">round</span>(ticket_pay_rate_2011 <span class="op">-</span> ticket_pay_rate_2013,<span class="dv">2</span>)</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'The change in repayment rater is </span><span class="sc">{</span>repayment_rate_change<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>revenue_change_2011_2013 <span class="op">=</span> (<span class="dv">193500</span> <span class="op">*</span> <span class="fl">.4059</span> <span class="op">*</span> <span class="dv">200</span>)<span class="op">-</span>(<span class="dv">193500</span> <span class="op">*</span> <span class="fl">.5395</span> <span class="op">*</span> <span class="dv">120</span>)</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>formatted_revenue_change_2011_2013 <span class="op">=</span> <span class="st">'</span><span class="sc">{:,.2f}</span><span class="st">'</span>.<span class="bu">format</span>(revenue_change_2011_2013)</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>revenue_2013 <span class="op">=</span> <span class="dv">193500</span> <span class="op">*</span> <span class="fl">.1336</span> <span class="op">*</span> <span class="dv">80</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The revenue change between 2011 and 2013 was an increase of $</span><span class="sc">{</span>formatted_revenue_change_2011_2013<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (<span class="ss">f'The predicted revenue for 2013 would be </span><span class="sc">{</span>revenue_2013<span class="sc">}</span><span class="ss"> USD'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Tickets issued in 2011 were 193500
+The ticket pay rate in 2011 was 53.95
+The change in repayment rater is 13.36
+The revenue change between 2011 and 2013 was an increase of $3,181,140.00
+The predicted revenue for 2013 would be 2068128.0 USD</code></pre>
+</div>
+</div>
+<p>Tickets issued in 2011 were 193500 The ticket pay rate in 2011 was 53.95 The change in repayment rate is 13.36 The revenue change between 2011 and 2013 was an increase of $3,181,140.00</p>
+<p>2.5</p>
+<div id="7722d53b" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating a loop function to get the repayment rates</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>years <span class="op">=</span> <span class="bu">range</span>(sticker_violations_monthly[<span class="st">'issue_date'</span>].dt.year.<span class="bu">min</span>(), </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>              sticker_violations_monthly[<span class="st">'issue_date'</span>].dt.year.<span class="bu">max</span>() <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>repayment_rates <span class="op">=</span> []</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> year <span class="kw">in</span> years:</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    sticker_violations_year <span class="op">=</span> sticker_violations_monthly[</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>        sticker_violations_monthly[<span class="st">'issue_date'</span>].dt.year <span class="op">==</span> year]</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    issued <span class="op">=</span> sticker_violations_year[<span class="st">'ticket_queue'</span>].count()</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    paid <span class="op">=</span> sticker_violations_year[sticker_violations_year[<span class="st">"ticket_queue"</span>] <span class="op">==</span> <span class="st">"Paid"</span>][<span class="st">'ticket_queue'</span>].count()</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    repayment_rate <span class="op">=</span> (paid <span class="op">/</span> issued) <span class="op">*</span> <span class="dv">100</span> <span class="cf">if</span> issued <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="dv">0</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    repayment_rates.append({<span class="st">'year'</span>: year, <span class="st">'repayment_rate'</span>: repayment_rate})</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Create DataFrame from the results</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>df_repayment <span class="op">=</span> pd.DataFrame(repayment_rates)</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_repayment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    year  repayment_rate
+0   2007       55.085865
+1   2008       57.885224
+2   2009       53.113383
+3   2010       51.987921
+4   2011       53.953488
+5   2012       48.220803
+6   2013       40.592131
+7   2014       38.419753
+8   2015       40.616133
+9   2016       40.768551
+10  2017       37.012411
+11  2018       20.144928</code></pre>
+</div>
+</div>
+<div id="b538ecf5" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Repayment rate chart</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>repayment_rates_chart <span class="op">=</span> alt.Chart(df_repayment).mark_line(point<span class="op">=</span><span class="va">True</span>).encode(</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">'year:O'</span>, title<span class="op">=</span><span class="st">'Year'</span>),</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">'repayment_rate:Q'</span>, title<span class="op">=</span><span class="st">'Repayment Rate (%)'</span>, scale<span class="op">=</span>alt.Scale(zero<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Repayment Rates for "Missing City Sticker" Tickets'</span>,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">800</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">400</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Add vertical line for policy introduction</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>policy_line <span class="op">=</span> alt.Chart(pd.DataFrame({<span class="st">'year'</span>: [<span class="dv">2012</span>]})).mark_rule(color<span class="op">=</span><span class="st">'red'</span>).encode(</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">'year:O'</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Add text annotation for the policy line</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>policy_text <span class="op">=</span> alt.Chart(pd.DataFrame({<span class="st">'year'</span>: [<span class="dv">2012</span>], <span class="st">'text'</span>: [<span class="st">'Price Increase Year'</span>]})).mark_text(</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>    align<span class="op">=</span><span class="st">'right'</span>,</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>    baseline<span class="op">=</span><span class="st">'top'</span>,</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>    dx<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>    dy<span class="op">=</span><span class="dv">2</span></span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>).encode(</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">'year:O'</span>,</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>    text<span class="op">=</span><span class="st">'text'</span></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine the chart elements</span></span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>repayment_rates_chart <span class="op">=</span> (repayment_rates_chart <span class="op">+</span> policy_line <span class="op">+</span> policy_text).interactive()</span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the chart</span></span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>repayment_rates_chart</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="43">
+<div>
+<figure class="figure">
+<p><img src="ps2_files/figure-html/cell-17-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>To add the line on a specific date: https://altair-viz.github.io/gallery/line_chart_with_datum.html</p>
+<p>To add text to the line: https://altair-viz.github.io/user_guide/marks/text.html The graph has a clear downward trend, even before the price increase in 2012. However, we do see that there seemed to be a sharper downward tren from 2012-2013, and then a sharper one from 2017 to 2018. From this, we can glean that the city overestimated the revenue increase by a lot because they did not account for the fact that people would probably have a hard time repaying higher fines.</p>
+<p>2.6</p>
+<div id="58717264" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the issue count and repayment rates</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>total_tickets <span class="op">=</span> df[<span class="st">'violation_description'</span>].value_counts().reset_index()</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>total_tickets.columns <span class="op">=</span> [<span class="st">'violation_description'</span>, <span class="st">'total_tickets'</span>]</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate repayment rates for each violation type</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>repayment_rates_by_type <span class="op">=</span> df.groupby(<span class="st">'violation_description'</span>).<span class="bu">apply</span>(</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> x: (x[<span class="st">'ticket_queue'</span>] <span class="op">==</span> <span class="st">'Paid'</span>).<span class="bu">sum</span>() <span class="op">/</span> <span class="bu">len</span>(x) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>).reset_index()</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>repayment_rates_by_type.columns <span class="op">=</span> [<span class="st">'violation_description'</span>, <span class="st">'repayment_rate'</span>]</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge the issue counts with repayment rates</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> pd.merge(total_tickets, repayment_rates_by_type, on<span class="op">=</span><span class="st">'violation_description'</span>)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Expected revenue</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>result[<span class="st">'expected_revenue'</span>] <span class="op">=</span> (result[<span class="st">'total_tickets'</span>] <span class="op">*</span> result[<span class="st">'repayment_rate'</span>]) <span class="op">/</span> <span class="dv">100</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Round repayment_rate and expected_revenue for clarity</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>result[<span class="st">'repayment_rate'</span>] <span class="op">=</span> result[<span class="st">'repayment_rate'</span>].<span class="bu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>result[<span class="st">'expected_revenue'</span>] <span class="op">=</span> result[<span class="st">'expected_revenue'</span>].<span class="bu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort by expected revenue in descending order and select top 10</span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>top_10 <span class="op">=</span> result.sort_values(<span class="st">'expected_revenue'</span>, ascending<span class="op">=</span><span class="va">False</span>).head(<span class="dv">10</span>)</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the top 10 table</span></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Top 10 Violations by Expected Revenue:"</span>)</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(top_10[[<span class="st">'violation_description'</span>, <span class="st">'total_tickets'</span>, <span class="st">'repayment_rate'</span>, <span class="st">'expected_revenue'</span>]])</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the violation with the highest expected revenue</span></span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>highest_revenue_row <span class="op">=</span> top_10.loc[top_10[<span class="st">'expected_revenue'</span>].idxmax()]</span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>highest_revenue_violation <span class="op">=</span> highest_revenue_row[<span class="st">'violation_description'</span>]</span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Print details</span></span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">The violation with the highest expected revenue is: </span><span class="sc">{</span>highest_revenue_violation<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Details of this violation:</span><span class="ch">\n</span><span class="sc">{</span>highest_revenue_row<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Top 10 Violations by Expected Revenue:
+                       violation_description  total_tickets  repayment_rate  \
+0   EXPIRED PLATES OR TEMPORARY REGISTRATION          44811           60.44   
+1                            STREET CLEANING          28712           81.16   
+2                 RESIDENTIAL PERMIT PARKING          23683           74.23   
+3   EXP. METER NON-CENTRAL BUSINESS DISTRICT          20600           79.29   
+5                  EXPIRED METER OR OVERSTAY          18756           80.64   
+4        PARKING/STANDING PROHIBITED ANYTIME          19753           70.58   
+8                          RUSH HOUR PARKING          11965           77.04   
+6              REAR AND FRONT PLATE REQUIRED          15829           53.05   
+10   EXPIRED METER CENTRAL BUSINESS DISTRICT           9736           74.17   
+11       NO STANDING/PARKING TIME RESTRICTED           8640           75.12   
+
+    expected_revenue  
+0            27082.0  
+1            23303.0  
+2            17579.0  
+3            16334.0  
+5            15124.0  
+4            13942.0  
+8             9218.0  
+6             8397.0  
+10            7221.0  
+11            6490.0  
+
+The violation with the highest expected revenue is: EXPIRED PLATES OR TEMPORARY REGISTRATION
+Details of this violation:
+violation_description    EXPIRED PLATES OR TEMPORARY REGISTRATION
+total_tickets                                               44811
+repayment_rate                                              60.44
+expected_revenue                                          27082.0
+Name: 0, dtype: object</code></pre>
+</div>
+</div>
+<p>The violation that would earn the city the most money, given the numnber of tickets issued and the repayment rate is EXPIRED PLATES OR TEMPORARY REGISTRATION. This will lead to an expected revenue of $2,708,200.0</p>
+<div id="c24013be" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>top_10_chart <span class="op">=</span> alt.Chart(top_10).mark_bar(color<span class="op">=</span><span class="st">'steelblue'</span>).encode(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">'violation_description:N'</span>,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>            sort<span class="op">=</span><span class="st">'-y'</span>,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>            title<span class="op">=</span><span class="st">'Violation Type'</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>            axis<span class="op">=</span>alt.Axis(</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>                labelAngle<span class="op">=-</span><span class="dv">65</span>,  <span class="co"># Increased angle for better fit</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>                labelFontSize<span class="op">=</span><span class="dv">9</span>,  <span class="co"># Slightly reduced font size</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>                labelLimit<span class="op">=</span><span class="dv">300</span>,  <span class="co"># Increased label limit</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>                labelOverlap<span class="op">=</span><span class="va">False</span>,  <span class="co"># Disable label overlap removal</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>                labelAlign<span class="op">=</span><span class="st">'right'</span>,</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>                labelPadding<span class="op">=</span><span class="dv">4</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>           ),  </span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">'expected_revenue:Q'</span>,</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>            title<span class="op">=</span><span class="st">'Expected Revenue ($)'</span>),</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">1200</span>,  <span class="co"># Increased width</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">600</span>,  <span class="co"># Increased height</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Top 10 Violation Types by Expected Revenue'</span></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>).configure_axis(</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>    titleFontSize<span class="op">=</span><span class="dv">14</span>,</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>    labelFontSize<span class="op">=</span><span class="dv">9</span>  <span class="co"># Consistent font size for all labels</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>).configure_view(</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>    strokeWidth<span class="op">=</span><span class="dv">0</span>  <span class="co"># Remove border around the chart</span></span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>top_10_chart</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="45">
+<div>
+<figure class="figure">
+<p><img src="ps2_files/figure-html/cell-19-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="part-3" class="level1">
+<h1>Part 3</h1>
+<p>3.1</p>
+<div id="77a3edfc" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>merged_sticker_violations[<span class="st">'is_paid'</span>] <span class="op">=</span> merged_sticker_violations[<span class="st">'ticket_queue'</span>] <span class="op">==</span> <span class="st">'Paid'</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Group by violation code and aggregate</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>violation_summary <span class="op">=</span> merged_sticker_violations.groupby(<span class="st">'violation_code'</span>).agg(</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    violation_description<span class="op">=</span>(<span class="st">'violation_description'</span>, <span class="st">'first'</span>),</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    repayment_rate<span class="op">=</span>(<span class="st">'is_paid'</span>, <span class="st">'mean'</span>),</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    avg_fine_level1<span class="op">=</span>(<span class="st">'fine_level1_amount'</span>, <span class="st">'mean'</span>),</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    total_tickets<span class="op">=</span>(<span class="st">'violation_description'</span>, <span class="st">'size'</span>)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>).reset_index()</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort by total tickets issued in descending order</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>sorted_violation_summary <span class="op">=</span> violation_summary.sort_values(by<span class="op">=</span><span class="st">'total_tickets'</span>, ascending<span class="op">=</span><span class="va">False</span>).reset_index()</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Select only the desired columns</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>violation_summary_selected <span class="op">=</span> sorted_violation_summary[[<span class="st">'violation_description'</span>, <span class="st">'repayment_rate'</span>, <span class="st">'avg_fine_level1'</span>]]</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the top 5 most common violation descriptions</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>top_5_violation_summary <span class="op">=</span> violation_summary_selected.head(<span class="dv">5</span>)</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(top_5_violation_summary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                      violation_description  repayment_rate  avg_fine_level1
+0  EXPIRED PLATES OR TEMPORARY REGISTRATION        0.604361        54.968869
+1          STREET CLEANING OR SPECIAL EVENT        0.809083        53.583629
+2       NO CITY STICKER OR IMPROPER DISPLAY        0.460770       165.552580
+3                RESIDENTIAL PERMIT PARKING        0.742262        66.338302
+4  EXP. METER NON-CENTRAL BUSINESS DISTRICT        0.792913        46.598058</code></pre>
+</div>
+</div>
+<p>3.2</p>
+<div id="0fd11e9b" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Selecting only tickets with that show up 100 or more times.</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>violation_summary_selected_100 <span class="op">=</span> sorted_violation_summary[sorted_violation_summary[<span class="st">'total_tickets'</span>] <span class="op">&gt;=</span> <span class="dv">100</span>]</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Removing the highest fine</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>outlier_fine <span class="op">=</span> violation_summary_selected_100[<span class="st">'avg_fine_level1'</span>].idxmax()</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>violation_summary_selected_100 <span class="op">=</span> violation_summary_selected_100.drop(outlier_fine)</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Scatterplot</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>scatter_fine_repayment <span class="op">=</span> alt.Chart(violation_summary_selected_100).mark_circle(color<span class="op">=</span><span class="st">'steelblue'</span>).encode(</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">'avg_fine_level1:Q'</span>, title<span class="op">=</span><span class="st">'Average Level 1 Fine ($)'</span>),</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">'repayment_rate:Q'</span>, title<span class="op">=</span><span class="st">'Repayment Rate'</span>)</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Relationship Between Fine Amount and Repayment Rate'</span></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>scatter_fine_repayment.display()</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a><span class="co"># BOXPLOT</span></span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>box__fine_repayment <span class="op">=</span> alt.Chart(violation_summary_selected_100).mark_boxplot().encode(</span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">'avg_fine_level1:Q'</span>, title<span class="op">=</span><span class="st">'Average Level 1 Fine ($)'</span>, <span class="bu">bin</span> <span class="op">=</span> <span class="va">True</span>),</span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">'repayment_rate:Q'</span>, title<span class="op">=</span><span class="st">'Repayment Rate'</span>),</span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>    tooltip<span class="op">=</span>[<span class="st">'violation_description'</span>, <span class="st">'total_tickets'</span>, <span class="st">'avg_fine_level1'</span>, <span class="st">'repayment_rate'</span>]</span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Relationship Between Fine Amount and Repayment Rate'</span></span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>box__fine_repayment.display()</span>
+<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Bar graph</span></span>
+<span id="cb31-31"><a href="#cb31-31" aria-hidden="true" tabindex="-1"></a>bar_fine_repayment <span class="op">=</span> alt.Chart(violation_summary_selected_100).mark_bar().encode(</span>
+<span id="cb31-32"><a href="#cb31-32" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">'avg_fine_level1:Q'</span>, title<span class="op">=</span><span class="st">'Average Level 1 Fine ($)'</span>),</span>
+<span id="cb31-33"><a href="#cb31-33" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">'repayment_rate:Q'</span>, title<span class="op">=</span><span class="st">'Repayment Rate'</span>),</span>
+<span id="cb31-34"><a href="#cb31-34" aria-hidden="true" tabindex="-1"></a>    tooltip<span class="op">=</span>[<span class="st">'violation_description'</span>, <span class="st">'total_tickets'</span>, <span class="st">'avg_fine_level1'</span>, <span class="st">'repayment_rate'</span>]</span>
+<span id="cb31-35"><a href="#cb31-35" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb31-36"><a href="#cb31-36" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Relationship Between Fine Amount and Repayment Rate'</span></span>
+<span id="cb31-37"><a href="#cb31-37" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb31-38"><a href="#cb31-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-39"><a href="#cb31-39" aria-hidden="true" tabindex="-1"></a>bar_fine_repayment.display()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ps2_files/figure-html/cell-21-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ps2_files/figure-html/cell-21-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ps2_files/figure-html/cell-21-output-3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Headline (scatter): Weak Negative Correlation Observed Between Fine Amount and Repayment Rate Submessage(scatter): The scatterplot reveals a weak negative correlation between average fine and repayment rate. As the average fine increases, the repayment rate tends to decrease. Many violation types have average fines clustered around the $20-$80 range, with repayment rates varying significantly from 20% to nearly 90%. Headline(box): Boxplot Provides Detailed Distribution Insights Submessage(box): The boxplot offers a detailed view of data distribution, showing medians, ranges, and outliers. Notably, fines set at $120 exhibit a wide range in repayment rates.We see that there aren’t observations past around $150 fine level. Headline(bar): Bar Graph Highlights Highest Repayment Rates Submessage(bar): The bar graph clearly identifies violations with the highest repayment rates. However, it does not effectively convey the variation per violation type or illustrate the weak negative relationship as clearly as the scatterplot.We also see that some fine levels have no observations.</p>
+<p>3.2 Although it is more detailed, the averatge reader will have a hard time understanding this, especialy if they’re not that familiar with statistics. That is why a scatterplot, thought it has less information, is better for relaying information to the general public. At the very least, you can provide the most salient pieces of data to them in a way that is easily understood.</p>
+</section>
+<section id="part-4" class="level1">
+<h1>Part 4</h1>
+<p>4.1</p>
+<div id="eaff3386" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking if the fine doubles</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'fine_doubles'</span>] <span class="op">=</span> df[<span class="st">'fine_level2_amount'</span>] <span class="op">==</span> df[<span class="st">'fine_level1_amount'</span>] <span class="op">*</span> <span class="dv">2</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking if this is true for most of the data</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>double_fine <span class="op">=</span> df[<span class="st">'fine_doubles'</span>].mean()</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"We see that most fines do double </span><span class="sc">{</span>double_fine<span class="sc">:.2%}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>We see that most fines do double 98.61%</code></pre>
+</div>
+</div>
+<p>Not all violations double in price.</p>
+<div id="6dd0114b" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for violations that do not double and drop NaN values</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>non_double <span class="op">=</span> df[df[<span class="st">'fine_level2_amount'</span>] <span class="op">!=</span> <span class="dv">2</span> <span class="op">*</span> df[<span class="st">'fine_level1_amount'</span>]].dropna(subset<span class="op">=</span>[<span class="st">'fine_level1_amount'</span>, <span class="st">'fine_level2_amount'</span>])</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate fine increases for violations that do not double</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>non_double[<span class="st">'fine_increase'</span>] <span class="op">=</span> non_double[<span class="st">'fine_level2_amount'</span>] <span class="op">-</span> non_double[<span class="st">'fine_level1_amount'</span>]</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Count citations for each violation description</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>non_double_counts <span class="op">=</span> non_double.groupby(<span class="st">"violation_description"</span>).size().reset_index(name<span class="op">=</span><span class="st">'citation_count'</span>)</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter types with at least 100 citations</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>non_double_100 <span class="op">=</span> non_double_counts[non_double_counts[<span class="st">'citation_count'</span>] <span class="op">&gt;=</span> <span class="dv">100</span>].reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge the fine increase information back with the counts</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>non_double_fine_increase <span class="op">=</span> non_double[non_double[<span class="st">'violation_description'</span>].isin(non_double_100[<span class="st">'violation_description'</span>])]</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>non_double_fine_increase <span class="op">=</span> non_double_fine_increase[[<span class="st">'violation_description'</span>, <span class="st">'fine_increase'</span>]].drop_duplicates().reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st"> The fine increases for violations with at least 100 citations that do not double are:"</span>)</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(non_double_fine_increase)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ The fine increases for violations with at least 100 citations that do not double are:
+                   violation_description  fine_increase
+0                  DISABLED PARKING ZONE             50
+1                    PARK OR BLOCK ALLEY            100
+2   BLOCK ACCESS/ALLEY/DRIVEWAY/FIRELANE            100
+3  SMOKED/TINTED WINDOWS PARKED/STANDING              0</code></pre>
+</div>
+</div>
+<p>4.2 Attacking image (tip from Vitor) <img src="notice_level.jpg" class="img-fluid" alt="ticket_queue"> <img src="ticket.jpg" class="img-fluid" alt="notice_level"></p>
+<p>https://www.chicago.gov/city/en/depts/fin/supp_info/revenue/parking_and_red-lightnoticeinformation5/violation_status.html</p>
+<p>4.3 Making a scatterplot with labels</p>
+<div id="03b17595" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>scatter_labelled <span class="op">=</span> alt.Chart(violation_summary_selected_100).mark_point().encode(</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">'avg_fine_level1:Q'</span>, title<span class="op">=</span><span class="st">'Average Fine Level 1 ($)'</span>),</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">'repayment_rate:Q'</span>, title<span class="op">=</span><span class="st">'Repayment Rate'</span>)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Relationship Between Fine Amount and Repayment Rate'</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>scatter_labelled.display()</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> scatter_labelled.mark_text(</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>    align<span class="op">=</span><span class="st">'center'</span>,</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>    baseline<span class="op">=</span><span class="st">'middle'</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>).encode(</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>    text<span class="op">=</span><span class="st">'violation_description:N'</span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>scatter_labelled <span class="op">+</span> text</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ps2_files/figure-html/cell-24-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="50">
+<div>
+<figure class="figure">
+<p><img src="ps2_files/figure-html/cell-24-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Making a scatterplot with legend</p>
+<div id="fe2ede65" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>scatter_legend <span class="op">=</span> alt.Chart(violation_summary_selected_100).mark_point(size<span class="op">=</span><span class="dv">60</span>).encode(</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">'avg_fine_level1:Q'</span>, title<span class="op">=</span><span class="st">'Average Fine Level 1 ($)'</span>),</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">'repayment_rate:Q'</span>, title<span class="op">=</span><span class="st">'Repayment Rate'</span>),</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>alt.Color(<span class="st">'violation_description:N'</span>, legend<span class="op">=</span>alt.Legend(title<span class="op">=</span><span class="st">'Violation Description'</span>))  </span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Relationship Between Fine Amount and Repayment Rate'</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the scatter plot</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>scatter_legend.display()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ps2_files/figure-html/cell-25-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Revising the plots</p>
+<div id="cf5500b0" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The top 10 violations are in the top_10 df</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Label the top 10 violations and mark others as 'Other'</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>violation_summary_selected_100[<span class="st">'violation_label'</span>] <span class="op">=</span> violation_summary_selected_100[<span class="st">'violation_description'</span>].where(</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    violation_summary_selected_100[<span class="st">'violation_description'</span>].isin(top_10[<span class="st">'violation_description'</span>]),</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Other'</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the scatter plot</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>scatter_top_10 <span class="op">=</span> alt.Chart(violation_summary_selected_100).mark_point(size<span class="op">=</span><span class="dv">60</span>).encode(</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">'avg_fine_level1:Q'</span>, title<span class="op">=</span><span class="st">'Average Fine Level 1 ($)'</span>),</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">'repayment_rate:Q'</span>, title<span class="op">=</span><span class="st">'Repayment Rate'</span>),</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>alt.Color(<span class="st">'violation_label:N'</span>, legend<span class="op">=</span>alt.Legend(title<span class="op">=</span><span class="st">'Violation Description'</span>))  <span class="co"># Optional: add color encoding for labels</span></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Relationship Between Fine Amount and Repayment Rate'</span></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Add ing labels</span></span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> scatter_top_10.mark_text(</span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>    align<span class="op">=</span><span class="st">'left'</span>,</span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>    baseline<span class="op">=</span><span class="st">'middle'</span>,</span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>    dx<span class="op">=</span><span class="dv">7</span></span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>).encode(</span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>    text<span class="op">=</span><span class="st">'violation_label:N'</span>  <span class="co"># Use the new 'violation_label' column for labels</span></span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine the scatter plot and text labels</span></span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>scatter_top_10 <span class="op">=</span> scatter_top_10 <span class="op">+</span> text</span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the final chart</span></span>
+<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>scatter_top_10.display()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ps2_files/figure-html/cell-26-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Revising the plots (B)</p>
+<div id="8dbaa633" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Based on the top 10, we can group exp, park, sticker, and plate together.</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>unique_violations <span class="op">=</span> top_10[<span class="st">'violation_description'</span>].unique()</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to a list</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>unique_violations_list <span class="op">=</span> unique_violations.tolist()</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>unique_violations_df <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>    unique_violations_list, columns<span class="op">=</span>[<span class="st">'unique_values'</span>])</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> categorizing(description):</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">'EXP'</span> <span class="kw">in</span> description:</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'EXPIRATION'</span></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> <span class="st">'STICKER'</span> <span class="kw">in</span> description:</span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'STICKER'</span></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> <span class="st">'PARK'</span> <span class="kw">in</span> description:</span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'PARKING'</span>,</span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'OTHER'</span></span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Making a new column</span></span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>violation_summary_selected_100[<span class="st">'violation_category'</span>] <span class="op">=</span> violation_summary_selected_100[<span class="st">'violation_description'</span>].<span class="bu">apply</span>(</span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>    categorizing)</span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting</span></span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>scatter_categories <span class="op">=</span> alt.Chart(violation_summary_selected_100).mark_point(filled<span class="op">=</span><span class="va">True</span>).encode(</span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">'avg_fine_level1:Q'</span>, title<span class="op">=</span><span class="st">'Average Fine Level 1 ($)'</span>),</span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">'repayment_rate:Q'</span>, title<span class="op">=</span><span class="st">'Repayment Rate'</span>),</span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>alt.Color(<span class="st">'violation_category:N'</span>, title<span class="op">=</span><span class="st">'Violation Category'</span>,</span>
+<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a>                    scale<span class="op">=</span>alt.Scale(scheme<span class="op">=</span><span class="st">'category10'</span>))</span>
+<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a>).properties(</span>
+<span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Relationship Between Fine Amount and Repayment Rate'</span></span>
+<span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a>scatter_categories.display()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ps2_files/figure-html/cell-27-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="extra-credit" class="level1">
+<h1>Extra Credit</h1>
+<div id="e34e9579" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># getting patterns</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>patterns <span class="op">=</span> df.groupby([<span class="st">"violation_code"</span>, <span class="st">"violation_description"</span>]).size().reset_index(name<span class="op">=</span><span class="st">"count"</span>)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify codes with multiple descriptions</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>multiple_desc <span class="op">=</span> patterns.groupby(<span class="st">"violation_code"</span>).<span class="bu">filter</span>(<span class="kw">lambda</span> x: <span class="bu">len</span>(x) <span class="op">&gt;</span> <span class="dv">1</span>)</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Gettting the most common descriptions per code</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>common_descriptions <span class="op">=</span> multiple_desc.loc[multiple_desc.groupby(<span class="st">"violation_code"</span>)[<span class="st">"count"</span>].idxmax()]</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Making a dictionary for each one </span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>common_descriptions_dict <span class="op">=</span> <span class="bu">dict</span>(<span class="bu">zip</span>(common_descriptions[<span class="st">"violation_code"</span>], common_descriptions[<span class="st">"violation_description"</span>]))</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the original dataframe for codes with multiple descriptions</span></span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>df_multi <span class="op">=</span> df[df[<span class="st">"violation_code"</span>].isin(common_descriptions_dict.keys())]</span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the major description column</span></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>df_multi[<span class="st">"major_description"</span>] <span class="op">=</span> df_multi[<span class="st">"violation_code"</span>].<span class="bu">map</span>(common_descriptions_dict)</span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the top 3 codes by number of occurrences</span></span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>top_3_codes <span class="op">=</span> df_multi[<span class="st">"violation_code"</span>].value_counts().head(<span class="dv">3</span>)</span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"The top 3 violation codes with multiple descriptions 3:"</span>)</span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(top_3_codes)</span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_multi[[<span class="st">"violation_code"</span>, <span class="st">"violation_description"</span>, <span class="st">"major_description"</span>]].head(<span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The top 3 violation codes with multiple descriptions 3:
+violation_code
+0964040B    32082
+0976160A    16853
+0976160B     3072
+Name: count, dtype: int64
+    violation_code             violation_description  \
+6         0976160A     REAR AND FRONT PLATE REQUIRED   
+16        0976160A     REAR AND FRONT PLATE REQUIRED   
+17        0964200B             OUTSIDE METERED SPACE   
+68        0964040B  STREET CLEANING OR SPECIAL EVENT   
+75        0964040B  STREET CLEANING OR SPECIAL EVENT   
+77        0964040B  STREET CLEANING OR SPECIAL EVENT   
+80        0976160A     REAR AND FRONT PLATE REQUIRED   
+94        0976160A     REAR AND FRONT PLATE REQUIRED   
+96        0964040B  STREET CLEANING OR SPECIAL EVENT   
+138       0976160A     REAR AND FRONT PLATE REQUIRED   
+
+                 major_description  
+6    REAR AND FRONT PLATE REQUIRED  
+16   REAR AND FRONT PLATE REQUIRED  
+17      PARK OUTSIDE METERED SPACE  
+68                 STREET CLEANING  
+75                 STREET CLEANING  
+77                 STREET CLEANING  
+80   REAR AND FRONT PLATE REQUIRED  
+94   REAR AND FRONT PLATE REQUIRED  
+96                 STREET CLEANING  
+138  REAR AND FRONT PLATE REQUIRED  </code></pre>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

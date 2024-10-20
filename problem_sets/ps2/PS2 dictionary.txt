@@ -1,0 +1,10 @@
+PS2 dictionary
+df-original df
+two_col_df- two columns showing NAs in df
+descending_two_col_df- in order
+filtered_violations- filtered for no city sticker filtered_violations
+violation_codes-list of the violated codes filtered for the sticker violation_codes
+violation_fines- fines per violation_codes
+merged_sticker_violations-made the violated codes the same for no sticker
+sticker_violations_monthly- new df for the new violation code, with
+
